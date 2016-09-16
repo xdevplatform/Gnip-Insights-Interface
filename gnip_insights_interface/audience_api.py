@@ -34,8 +34,7 @@ def get_segment_id_by_name(segment_name):
     corresponding to input segment name.
     If it doesn't exist, return None
     """
-    creds,auth,json_header = get_query_setup()
-    base_url = creds['url']
+    base_url,auth,json_header = get_query_setup(api='audience')
     
     segment_id = None
     next_token = ""
@@ -75,8 +74,7 @@ def add_segment(user_ids, segment_name, max_upload_size = 100000):
 
     # if not existing, create the new segment
     if segment_id is None:
-        creds,auth,json_header = get_query_setup()
-        base_url = creds['url']
+        base_url,auth,json_header = get_query_setup(api='audience')
     
         logger.info('Segment not created; adding it')
         segment_creation_response = requests.post(base_url + '/segments'
@@ -112,8 +110,7 @@ def query_audience(unique_id, groupings):
     Get segments associated with unique_id
     Create and query audience
     """
-    creds,auth,json_header = get_query_setup()
-    base_url = creds['url']
+    base_url,auth,json_header = get_query_setup(api='audience')
     
     audience_name = unique_id
     next_token = ""

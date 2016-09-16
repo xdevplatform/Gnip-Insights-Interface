@@ -4,6 +4,7 @@ import argparse
 import json
 import sys
 import datetime
+import yaml
 
 import gnip_insights_interface.engagement_api as api
 
@@ -25,6 +26,8 @@ parser.add_argument('-H','--historical',dest='do_historical',default=(None,None)
 parser.add_argument('-M','--month',dest='do_month',default=False,
         action='store_true',
         help="return engagement data for 27 days after post time")
+parser.add_argument('-c','--config-file',dest='config_file',default=None,
+        help="YAML config file to specify groupings and engagement types")
 args = parser.parse_args()
 
 if args.tweet_ids != [] and args.tweet_ids_file is not None:
@@ -42,13 +45,18 @@ elif args.tweet_ids_file is not None:
 else:
     input_generator = args.tweet_ids
 
-# TODO
+# default groupings and engagement_types
 groupings = {'totals': {'group_by' : ['tweet.id','engagement.type']},
-        'daily_counts': {'group_by': ['tweet.id','engagement.type','engagement.day']}
         }
-#engagement_types = ['impressions']
-#engagement_types = ['impressions','engagements','favorites']
-engagement_types = ['impressions','engagements','favorites','replies','retweets','url_clicks','hashtag_clicks','media_clicks','app_opens','email_tweet','user_follows','user_profile_clicks','video_views']
+engagement_types = ['impressions'] 
+
+if args.config_file is not None:
+    config = yaml.load(open(args.config_file))
+    if 'engagement' in config:
+        if 'groupings' in config['engagement']:
+            groupings = config['engagement']['groupings']
+        if 'engagement_types' in config['engagement']:
+            engagement_types = config['engagement']['engagement_types']
 
 if args.do_total:
     endpoint = 'totals' 

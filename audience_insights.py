@@ -5,12 +5,15 @@ import os
 import datetime
 import argparse
 import json
+import yaml
 
 from gnip_insights_interface import audience_api
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-i','--input-file-name',dest='input_file_name',default=None,
-        help='unique identifier to be applied to output file names; default is %(default)s')
+        help='unique identifier to be applied to output file names; default is %(default)s'),
+parser.add_argument('-c','--config-file',dest='config_file',default=None,
+        help="YAML config file to specify groupings")
 args = parser.parse_args()
 
 # set up inputs
@@ -21,15 +24,11 @@ else:
 
 # set default groupings
 groupings_dict = {"groupings": {
-    "gender": {"group_by": ["user.gender"]}
-    , "location_country": {"group_by": ["user.location.country"]}
-    , "location_country_region": {"group_by": ["user.location.country", "user.location.region"]}
-    , "interest": {"group_by": ["user.interest"]}
-    , "tv_genre": {"group_by": ["user.tv.genre"]}
-    , "device_os": {"group_by": ["user.device.os"]}
-    , "device_network": {"group_by": ["user.device.network"]}
-    , "language": {"group_by": ["user.language"]}
+    "gender": {"group_by": ["user.gender"]},
+    "language": {"group_by": ["user.language"]},
 }}
+if args.config_file is not None:
+    groupings_dict = {"groupings": yaml.load(open(args.config_file))['audience']['groupings']}
 groupings = json.dumps(groupings_dict)
 
 # analyze and output

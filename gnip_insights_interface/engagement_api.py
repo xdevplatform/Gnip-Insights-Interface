@@ -88,10 +88,13 @@ def query_tweets(tweet_ids,
 
 def make_request(post_data,endpoint):
     """ Make a POST request """
-    creds,auth,json_header = get_query_setup(True)
+
+    # to access engagement data for ALL Tweets, we want blank strings
+    # for the 'token' and 'token_secret' credentials. 
+    base_url,auth,json_header = get_query_setup(api='engagement',no_token_creds=True)
     # we're rate-limited to 1/s
     time.sleep(1)
-    request = requests.post( creds['insights_url'] + '/engagement/' + endpoint, 
+    request = requests.post( base_url.rstrip('/') + '/' + endpoint, 
             auth = auth,
             headers = json_header, 
             data = json.dumps( post_data )
@@ -100,7 +103,8 @@ def make_request(post_data,endpoint):
         
 
 def get_posting_datetime(tweet_id):
-    creds,auth,json_header = get_query_setup()
+    """ get posting time for a Tweet """
+    url,auth,json_header = get_query_setup()
     request = requests.get('https://api.twitter.com/1.1/statuses/show.json?id=' + str(tweet_id),  
         auth = auth
     )
