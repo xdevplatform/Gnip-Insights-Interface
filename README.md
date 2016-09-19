@@ -3,13 +3,21 @@
 This repository contains a Python package and executable scripts that provide
 interfaces to the Gnip/Twitter
 [Audience](http://support.gnip.com/apis/audience_api/) and
-[Engagement](http://support.gnip.com/apis/engagement_api/) APIs.
+[Engagement](http://support.gnip.com/apis/engagement_api/) APIs. In addition
+to providing a straightforward interface to the Engegement API, this package 
+provides extra aggregation features. For the Audience API,
+this package provides a simplified interface for querying a single input set of
+user IDs.
 
 # Installation
 
-You can install a local version from the cloned repository location.
+You can pip-install the package:
 
-`[REPOSITORY] $ pip install gnip_insights_interface -U`
+`$ pip install gnip_insights_interface`
+
+You can also install a local version from the cloned repository location.
+
+`[REPOSITORY] $ pip install -e . -U`
 
 # Engagement API Interface
 
@@ -23,8 +31,12 @@ We construct the API interface in a python module called `engagement_api`,
 which is part of the `gnip_insights_interface` package.  We provide a script
 for command-line interface called `tweet_engagements.py`.  The script provides
 direct access the the three endpoint of the API: total counts (`-T`), 28 hour
-summary (`-D`, for "day"),  as well as an aggregating function (`-H`) which
-combines the data from results over an arbitrary time range. See the help menu.
+summary (`-D`, for "day"), as well as an aggregating function (`-H`) which
+combines the data from results over an arbitrary time range. See the help option.
+
+Custom groupings and engagements types are set with a YAML configuration file
+specified with the `-c` option. See example config in the `example` 
+directory in the repository.
 
 # Audience API Interface
 
@@ -38,7 +50,9 @@ documentation](http://support.gnip.com/apis/audience_api/).
 As with the Engagement interface, we construct the API interface in a python
 module called `audience_api`, which is part of the `gnip_insights_interface`
 package.  We provide a script for command-line interface called
-`audience_insights.py`.
+`audience_insights.py`. Custom groupings can be set with a YAML configuration
+file specified with the `-c` option. See example in the `example` directory 
+of the repository.
 
 Critically, this interface makes a key simplification: that a set of unique
 Twitter user IDs will always be associated with the same segment(s) and

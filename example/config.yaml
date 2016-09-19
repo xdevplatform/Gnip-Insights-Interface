@@ -1,0 +1,54 @@
+engagement:
+    groupings:
+        totals: 
+            group_by: 
+                - tweet.id
+                - engagement.type
+        daily_counts:
+            group_by:
+                - tweet.id
+                - engagement.type
+                - engagement.day
+
+    engagement_types:
+        - impressions
+        - engagements
+        - favorites
+        - replies
+        - retweets
+        - url_clicks
+        - hashtag_clicks
+        - media_clicks
+        - app_opens
+        - email_tweet
+        - user_follows
+        - user_profile_clicks
+        - video_views
+
+audience:
+    groupings:
+        gender:
+            group_by:
+                - user.gender
+        location_country:
+            group_by:
+                - user.location.country
+        location_country_region:
+            group_by:
+                - user.location.country
+                - user.location.region
+        interest:
+            group_by:
+                - user.interest
+        tv_genre:
+            group_by:
+                - user.tv.genre
+        device_os:
+            group_by:
+                - user.device.os
+        device_network:
+            group_by:
+                - user.device.network
+        language:
+            group_by:
+                - user.language
