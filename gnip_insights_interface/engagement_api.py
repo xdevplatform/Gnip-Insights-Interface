@@ -42,7 +42,7 @@ def query_tweets(tweet_ids,
 
     results = {}
 
-    # must creat physical list run 'len' on it
+    # must create physical list run 'len' on it
     tweet_ids = list(tweet_ids)
     # split tweet ID list into chunks of size 'max_tweet_ids' 
     for tweet_ids_chunk in [tweet_ids[i:i+max_tweet_ids] for i in range(0, len(tweet_ids), max_tweet_ids)]:  
@@ -91,7 +91,7 @@ def make_request(post_data,endpoint):
 
     # to access engagement data for ALL Tweets, we want blank strings
     # for the 'token' and 'token_secret' credentials. 
-    base_url,auth,json_header = get_query_setup(api='engagement',no_token_creds=True)
+    base_url,auth,json_header = get_query_setup(api='engagement')
     # we're rate-limited to 1/s
     time.sleep(1)
     request = requests.post( base_url.rstrip('/') + '/' + endpoint, 

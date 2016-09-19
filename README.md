@@ -26,7 +26,7 @@ This package expects to find a YAML credentials file called
 contain your [Twitter Oauth credentials](https://dev.twitter.com/oauth/3-legged)
 in the following format:
 
-`
+```
 username: YOUR_USER_NAME
 audience:
     consumer_key: --
@@ -40,7 +40,7 @@ engagement:
     token: --
     token_secret: --
     url: https://data-api.twitter.com/insights/engagement
-`
+```
 Depending on your Gnip account setup, you may have different credentials
 for the audience and engagement APIs.
 
@@ -87,8 +87,8 @@ in which the user wishes to create an audience from segments loaded from
 different lists of Twitter user IDs.
 
 The Audience API interface implements this simplification by sorting and
-hashing the input user ID set, thus creating a unique identifier for each 
-input set of IDs. This identifier is then used as the base name for the one or more
+hashing the input user ID set, thus creating a unique identifier for each unique
+set of IDs. This identifier is then used as the base name for the one or more
 segments that contain the user IDs, and as the name for the
 audience associated with that segment or segments. Multiple segments will only
 be created when the size of the input set of user IDs exceeds the maximum
