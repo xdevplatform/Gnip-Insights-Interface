@@ -19,6 +19,31 @@ You can also install a local version from the cloned repository location.
 
 `[REPOSITORY] $ pip install -e . -U`
 
+# Credentials
+
+This package expects to find a YAML credentials file called 
+`.twitter_api_creds` in your home directory. This files must
+contain your [Twitter Oauth credentials](https://dev.twitter.com/oauth/3-legged)
+in the following format:
+
+`
+username: YOUR_USER_NAME
+audience:
+    consumer_key: --
+    consumer_secret: --
+    token: --
+    token_secret: --
+    url: https://data-api.twitter.com/insights/audience
+engagement:
+    consumer_key: --
+    consumer_secret: --
+    token: --
+    token_secret: --
+    url: https://data-api.twitter.com/insights/engagement
+`
+Depending on your Gnip account setup, you may have different credentials
+for the audience and engagement APIs.
+
 # Engagement API Interface
 
 We provide an interface for passing a set of Tweet IDs to the Twitter
