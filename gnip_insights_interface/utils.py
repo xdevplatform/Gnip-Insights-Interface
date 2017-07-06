@@ -4,15 +4,18 @@ from requests_oauthlib import OAuth1
 
 from .exceptions import CredentialsException
 
-def get_query_setup(api="audience"):
+def get_query_setup(api="engagement"):
     """ 
     Do authentication and credentials stuff
     
-    The 'api' keyword-argument must be 'audience' or 'engagment'
+    The 'api' keyword-argument must be 'engagment'. 
+
     """
 
-    if api != 'audience' and api != 'engagement':
-        raise CredentialsException("'api' keyword-argument to get_query_setup must my 'audience' or 'engagment'")
+    if api == 'audience':
+        raise CredentialsException("Audience API interface is no longer supported")
+    if api != 'engagement':
+        raise CredentialsException("'api' keyword-argument to get_query_setup must be 'engagment'")
 
     creds_file_path = os.getenv('HOME') + '/.twitter_api_creds'
     if not os.path.exists(creds_file_path): 

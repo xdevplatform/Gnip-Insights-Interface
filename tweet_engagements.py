@@ -34,7 +34,7 @@ if args.tweet_ids != [] and args.tweet_ids_file is not None:
     sys.stderr.write('Ambiguous input! Must not specify both "-i" and "-f" options!. Exiting.\n') 
     sys.exit(1)
 if [args.do_total,args.do_28hr,(args.do_historical != (None,None)),args.do_month].count(True) != 1:
-    sys.stderr.write('Must only specify one of the options: [-T,-D,-H,-M]. Exiting.\n')
+    sys.stderr.write('Must specify exactly one of the options: [-T,-D,-H,-M]. Exiting.\n')
     sys.exit(1)
 
 if args.tweet_ids_file is None and args.tweet_ids == []:
@@ -76,8 +76,11 @@ if args.do_month:
         sys.stderr.write('Month option (-M) not implemented for more than one Tweet ID\n') 
         sys.exit(1)
     endpoint = 'historical'
-    max_tweet_ids = 25
+    max_tweet_ids = 1
     start_time,end_time = api.get_n_months_after_post(input_generator[0],1)
+    if datetime.datetime.strptime(end_time,'%Y-%m-%d') > datetime.datetime.now():
+        sys.stderr.write("Tweet was posted less than 27 days ago. Use 'totals' endpoint (-T)\n")
+        sys.exit(1)
 
 results = api.query_tweets(input_generator,
         groupings,

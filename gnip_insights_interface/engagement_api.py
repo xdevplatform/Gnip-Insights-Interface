@@ -3,6 +3,7 @@ import time
 import datetime
 import json
 import logging
+import itertools
 from dateutil.parser import parse as dt_parser
 
 from .utils import get_query_setup
@@ -33,20 +34,30 @@ def query_tweets(tweet_ids,
     ( date_range[0] is not None and date_range[1] is None ):
         raise DateRangeException("Must specify both or neither of the 'date_range' tuple elements")
 
+    #if datetime.datetime.strptime(date_range[1],'%Y-%m-%d') > datetime.datetime.now():
+    #    raise DateRangeException("Tweet was posted less than 27 days ago. Use 'totals' endpoint.")
+
     MAX_DATE_RANGE_IN_DAYS = 27
     def yield_date_range(start_date, end_date):
         """ yield datetime objects in MAX_DATE_RANGE_IN_DAYS intervals """
         for n in range(0, int((end_date - start_date).days), MAX_DATE_RANGE_IN_DAYS):
             yield start_date + datetime.timedelta(n)
 
+    def chunks(iterable, size=1):  
+        """ 
+        yield list representations of
+        'size'-length, consecutive slices of 'iterable' 
+        """
+        iterator = iter(iterable)
+        for first in iterator:
+            yield list(itertools.chain([first], itertools.islice(iterator, size - 1)))
+    
 
     results = {}
 
-    # must create physical list run 'len' on it
-    tweet_ids = list(tweet_ids)
     # split tweet ID list into chunks of size 'max_tweet_ids' 
-    for tweet_ids_chunk in [tweet_ids[i:i+max_tweet_ids] for i in range(0, len(tweet_ids), max_tweet_ids)]:  
-       
+    
+    for tweet_ids_chunk in chunks(tweet_ids,max_tweet_ids):  
         results_for_these_ids = {}
         post_data = {
             'tweet_ids' : tweet_ids_chunk,
@@ -55,13 +66,14 @@ def query_tweets(tweet_ids,
             } 
         
         if date_range == (None,None):
+            # this is '28hr' or 'totals' mode
             results_for_these_ids = make_request(post_data,endpoint)
         else: 
             # this is historical mode
             start_time = dt_parser(date_range[0])
             end_time = dt_parser(date_range[1])
         
-            # standard timed query
+            # standard timed query (only one call required)
             if (end_time - start_time).days <= MAX_DATE_RANGE_IN_DAYS:
                 start_time = dt_parser(date_range[0])
                 end_time = dt_parser(date_range[1])
@@ -69,7 +81,7 @@ def query_tweets(tweet_ids,
                 post_data['end'] = end_time.strftime('%Y-%m-%d')
                 results_for_these_ids = make_request(post_data,endpoint)
             
-            # extended timed query
+            # extended timed query (multiple calls required)
             else:
                 # iterate over all chunks of dates
                 for this_start_time in yield_date_range(start_time, end_time):
@@ -82,7 +94,6 @@ def query_tweets(tweet_ids,
                     
                     results_for_these_ids_and_dates = make_request(post_data,endpoint)
                     combine_results(results_for_these_ids,results_for_these_ids_and_dates,groupings)
-            
         combine_results(results,results_for_these_ids,groupings)
     return results
 
@@ -112,7 +123,10 @@ def get_posting_datetime(tweet_id):
     return datetime.datetime.strptime(posted_time,"%a %b %d %H:%M:%S +0000 %Y")
 
 def get_n_months_after_post(tweet_id,n):
-    """ For the given Tweet ID, return n-th 27day time interval after posting """
+    """ 
+    For the given Tweet ID, return string representation of the
+    'n'-th 27-day time interval after posting
+    """ 
 
     if n <= 0:
         logger.error('Must not set n<=0')
