@@ -1,0 +1,14 @@
+engagement:
+    groupings:
+        totals: 
+            group_by: 
+                - tweet.id
+                - engagement.type
+
+    engagement_types:
+        - impressions
+        - engagements
+        - favorites
+        - replies
+        - retweets
+
