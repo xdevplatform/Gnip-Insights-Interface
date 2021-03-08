@@ -2,11 +2,10 @@
 
 This repository contains a Python package that provides an
 interface to Twitter's
-[Engagement API](http://support.gnip.com/apis/engagement_api/).  
+[Engagement API](https://developer.twitter.com/en/docs/twitter-api/enterprise/engagement-api/overview).  
 In addition to providing a straightforward interface to the API, this package 
 implements extra aggregation features. 
-An interface to the [Audience](http://support.gnip.com/apis/audience_api/) API
-can be found on the `audience_api` branch.
+
 
 # Installation
 
@@ -41,7 +40,7 @@ We provide an interface for passing a set of Tweet IDs to the Twitter
 Engagement API, which provides engagement data such as impressions, favorites,
 and replies.  A full list of the available engagement types, their names, and
 the ways that they can be grouped is available in the [API
-documentation](http://support.gnip.com/apis/engagement_api/). 
+documentation](https://developer.twitter.com/en/docs/twitter-api/enterprise/engagement-api/overview). 
 
 We construct the API interface in a python module called `engagement_api`,
 which is part of the `gnip_insights_interface` package.  We provide a script
